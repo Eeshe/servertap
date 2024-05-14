@@ -14,7 +14,7 @@ public class PlayerChatWebhookEvent extends WebhookEvent {
     String message;
 
     public PlayerChatWebhookEvent() {
-        eventType = EventType.PlayerChat;
+        super("AsyncPlayerChatEvent");
     }
 
     public String getMessage() {

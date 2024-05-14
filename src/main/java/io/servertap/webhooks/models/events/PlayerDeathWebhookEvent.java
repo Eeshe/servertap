@@ -17,7 +17,7 @@ public class PlayerDeathWebhookEvent extends WebhookEvent {
     private List<ItemStack> drops;
 
     public PlayerDeathWebhookEvent() {
-        eventType = EventType.PlayerDeath;
+        super("PlayerDeathEvent");
     }
 
     public Player getPlayer() {

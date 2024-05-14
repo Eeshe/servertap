@@ -9,6 +9,7 @@ import io.servertap.utils.ConsoleListener;
 import io.servertap.utils.LagDetector;
 import io.servertap.utils.pluginwrappers.ExternalPluginWrapperRepo;
 import io.servertap.webhooks.WebhookEventListener;
+import io.servertap.webhooks.managers.WebhookManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ public class ServerTapMain extends JavaPlugin {
     private final Logger rootLogger = (Logger) LogManager.getRootLogger();
     private final List<ConsoleLine> consoleBuffer = new ArrayList<>();
     private ExternalPluginWrapperRepo externalPluginWrapperRepo;
+    private WebhookManager webhookManager;
     private WebhookEventListener webhookEventListener;
     private int maxConsoleBufferSize = 1000;
     private ConsoleListener consoleListener;
@@ -75,7 +77,9 @@ public class ServerTapMain extends JavaPlugin {
 
         new ServerTapCommand(this);
 
-        webhookEventListener = new WebhookEventListener(this, bukkitConfig, log, externalPluginWrapperRepo.getEconomyWrapper());
+        webhookManager = new WebhookManager(this, bukkitConfig, log);
+
+        webhookEventListener = new WebhookEventListener(this, webhookManager, log);
         server.getPluginManager().registerEvents(webhookEventListener, this);
 
         server.getServicesManager().register(ServerTapWebserverService.class, new ServerTapWebserverServiceImpl(this), this, ServicePriority.Normal);
@@ -101,7 +105,7 @@ public class ServerTapMain extends JavaPlugin {
 
         setupWebServer(bukkitConfig);
 
-        webhookEventListener.loadWebhooksFromConfig(bukkitConfig);
+        webhookManager.loadWebhooksFromConfig(bukkitConfig);
         log.info("[ServerTap] ServerTap reloaded successfully!");
     }
 
@@ -123,5 +127,13 @@ public class ServerTapMain extends JavaPlugin {
 
     public WebServer getWebServer() {
         return this.app;
+    }
+
+    public ExternalPluginWrapperRepo getExternalPluginWrapperRepo() {
+        return externalPluginWrapperRepo;
+    }
+
+    public WebhookManager getWebhookManager() {
+        return webhookManager;
     }
 }

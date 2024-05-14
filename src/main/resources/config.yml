@@ -24,11 +24,11 @@ corsOrigins:
 #  default:
 #    listener: "https://your-webhook-target.com/whatever"
 #    events:
-#      - PlayerJoin
-#      - PlayerQuit
-#      - PlayerKick
-#      - PlayerDeath
-#      - PlayerChat
+#      - PlayerJoinEvent
+#      - PlayerQuitEvent
+#      - PlayerKickEvent
+#      - PlayerDeathEvent
+#      - AsyncPlayerChatEvent
 
 # Number of console log lines to send when websocket connections are opened
 # Set to 0 to effectively disable this

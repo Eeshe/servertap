@@ -1,6 +1,5 @@
 package io.servertap.webhooks;
 
-import io.servertap.webhooks.models.events.WebhookEvent;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.net.MalformedURLException;
@@ -12,9 +11,9 @@ import java.util.logging.Logger;
 
 public class Webhook {
     private String listenerUrl;
-    private List<WebhookEvent.EventType> registeredEvents;
+    private List<String> registeredEvents;
 
-    public Webhook(String listenerUrl, List<WebhookEvent.EventType> registeredEvents) {
+    public Webhook(String listenerUrl, List<String> registeredEvents) {
         setListenerUrl(listenerUrl);
         setRegisteredEvents(registeredEvents);
     }
@@ -25,14 +24,6 @@ public class Webhook {
 
     public void setListenerUrl(String listenerUrl) {
         this.listenerUrl = listenerUrl;
-    }
-
-    public List<WebhookEvent.EventType> getRegisteredEvents() {
-        return registeredEvents;
-    }
-
-    public void setRegisteredEvents(List<WebhookEvent.EventType> registeredEvents) {
-        this.registeredEvents = registeredEvents;
     }
 
     public static Optional<Webhook> getWebhookFromConfig(FileConfiguration bukkitConfig, String webhookName, String configPath, Logger log) {
@@ -56,12 +47,12 @@ public class Webhook {
             return Optional.empty();
         }
 
-        List<WebhookEvent.EventType> events = getWebhookEvents(webhookName, configPath, bukkitConfig, log);
+        List<String> events = getWebhookEvents(webhookName, configPath, bukkitConfig, log);
         return events.isEmpty() ? Optional.empty() : Optional.of(new Webhook(listenerUrl, events));
     }
 
-    private static List<WebhookEvent.EventType> getWebhookEvents(String webhookName, String configPath, FileConfiguration bukkitConfig, Logger log) {
-        List<WebhookEvent.EventType> events = new ArrayList<>();
+    private static List<String> getWebhookEvents(String webhookName, String configPath, FileConfiguration bukkitConfig, Logger log) {
+        List<String> events = new ArrayList<>();
         List<String> configEvents = bukkitConfig.getStringList(configPath + "events");
 
         // If the events path can't be interpreted as a list, try as a single string
@@ -76,20 +67,21 @@ public class Webhook {
             }
         }
 
-        for (String event : configEvents) {
-            try {
-                WebhookEvent.EventType eventType = WebhookEvent.EventType.valueOf(event);
-
-                if (events.contains(eventType)) {
-                    log.warning(String.format("[ServerTap] Warning: webhook '%s' registers duplicate event '%s'", webhookName, event));
-                    continue;
-                }
-
-                events.add(eventType);
-            } catch (IllegalArgumentException ex) {
-                log.warning(String.format("[ServerTap] Warning: webhook '%s' attempts to register invalid event '%s'", webhookName, event));
+        for (String eventName : configEvents) {
+            if (events.contains(eventName)) {
+                log.warning(String.format("[ServerTap] Warning: webhook '%s' registers duplicate event '%s'", webhookName, eventName));
+                continue;
             }
+            events.add(eventName);
         }
         return events;
+    }
+
+    public List<String> getRegisteredEvents() {
+        return registeredEvents;
+    }
+
+    public void setRegisteredEvents(List<String> registeredEvents) {
+        this.registeredEvents = registeredEvents;
     }
 }

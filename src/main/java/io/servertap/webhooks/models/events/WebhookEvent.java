@@ -3,8 +3,15 @@ package io.servertap.webhooks.models.events;
 import com.google.gson.annotations.Expose;
 
 public class WebhookEvent {
-    public enum EventType {PlayerJoin, PlayerQuit, PlayerKick, PlayerChat, PlayerDeath}
 
     @Expose
-    protected EventType eventType;
+    private final String eventName;
+
+    public WebhookEvent(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
 }

@@ -11,7 +11,7 @@ public class PlayerKickWebhookEvent extends WebhookEvent {
     String reason;
 
     public PlayerKickWebhookEvent() {
-        eventType = EventType.PlayerKick;
+        super("PlayerKickEvent");
     }
 
     public Player getPlayer() {

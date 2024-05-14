@@ -11,7 +11,7 @@ public class PlayerQuitWebhookEvent extends WebhookEvent {
     String quitMessage;
 
     public PlayerQuitWebhookEvent() {
-        eventType = EventType.PlayerQuit;
+        super("PlayerQuitEvent");
     }
 
     public Player getPlayer() {

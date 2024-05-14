@@ -11,7 +11,7 @@ public class PlayerJoinWebhookEvent extends WebhookEvent {
     String joinMessage;
 
     public PlayerJoinWebhookEvent() {
-        eventType = EventType.PlayerJoin;
+        super("PlayerJoinEvent");
     }
 
     public Player getPlayer() {
