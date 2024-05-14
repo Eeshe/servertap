@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 public class JSONUtil {
 
     public static Player fromBukkitPlayer(org.bukkit.entity.Player player) {
+        if (player == null) return null;
         Player p = new Player();
 
         EconomyWrapper economyWrapper = ServerTapMain.instance.getExternalPluginWrapperRepo().getEconomyWrapper();
